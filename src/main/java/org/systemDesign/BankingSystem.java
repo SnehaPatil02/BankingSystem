@@ -22,18 +22,36 @@ public class BankingSystem {
 
     //createAccount will take customer details as input returns account.
     public Record createAccount(String name, String address, String accountType) {
-        CustomerDetails cd = new CustomerDetails(name, address);
-        BankAccount ba = null;
+
+        BankAccount ba ;
+
         if (accountType.equals("Savings")) {
+
             ba = new SavingsAccount(0.00);
+
         } else {
             ba = new FixedDeposit(0.00);
         }
-        Record record = new Record(cd, ba);
-        this.records.add(record);
 
-        return record;
-    }
+
+        for (Record record : this.records) {
+            if (record.getCustomerDetails().getName().equals(name) && record.getCustomerDetails().getAddress().equals(address)) {
+
+                record.addBankAccount(ba);
+                System.out.println("------Bank Account is created for a existing customer------ " + "\n" + record.toString());
+                return record;
+
+            }
+        }
+
+
+        CustomerDetails cd = new CustomerDetails(name, address);
+            Record newrecord = new Record(cd, ba);
+            this.records.add(newrecord);
+        System.out.println("------A new Bank Account is created for a new customer------ " + "\n" + newrecord.toString());
+
+            return newrecord;
+        }
 
 
     public void closeAccount(String accountNumber) {
@@ -58,10 +76,13 @@ public class BankingSystem {
     public TransactionRecord credit(String accountNumber, double amount, String msg){
         BankAccount ba = null;
         for(Record record : this.records){
-            if(record.getBankAccounts().get(0).getAccountNumber().equals(accountNumber)){
-                ba = record.getBankAccounts().get(0);
-                break;
+            for (BankAccount bankAccount : record.getBankAccounts()){
+                if(bankAccount.getAccountNumber().equals(accountNumber)){
+                    ba = bankAccount;
+                    break;
+                }
             }
+
         }
 
         if (ba == null) {
@@ -80,10 +101,13 @@ public class BankingSystem {
     public TransactionRecord debit(String accountNumber, double amount, String msg){
         BankAccount ba = null;
         for(Record record : this.records){
-            if (record.getBankAccounts().get(0).getAccountNumber().equals(accountNumber)){
-                ba = record.getBankAccounts().get(0);
-                break;
+            for(BankAccount bankAccount : record.getBankAccounts()){
+                if (bankAccount.getAccountNumber().equals(accountNumber)){
+                    ba =bankAccount;
+                    break;
+                }
             }
+
         }
         if (ba == null){
             throw new RuntimeException("No such bank account");
@@ -102,9 +126,12 @@ public class BankingSystem {
     public void checkBalance(String accountNumber){
         BankAccount ba=null;
        for (Record r : this.records){
-           if(r.getBankAccounts().get(0).getAccountNumber().equals(accountNumber)){
-               ba = r.getBankAccounts().get(0);
+           for (BankAccount bankAccount : r.getBankAccounts()){
+               if(bankAccount.getAccountNumber().equals(accountNumber)){
+                   ba = bankAccount;
+               }
            }
+
        }
 
         if (ba == null){
@@ -118,9 +145,12 @@ public class BankingSystem {
     public List<TransactionRecord> transferAmount(String accountNumber1, String accountNumber2, double amount, String msg1, String msg2){
         BankAccount ba1 = null;
         for(Record record : this.records){
-            if(record.getBankAccounts().get(0).getAccountNumber().equals(accountNumber1)){
-                ba1 = record.getBankAccounts().get(0);
+            for (BankAccount bankAccount : record.getBankAccounts()){
+                if(bankAccount.getAccountNumber().equals(accountNumber1)){
+                    ba1 = bankAccount;
+                }
             }
+
         }if(ba1 == null){
             throw new RuntimeException("No such account");
         }
@@ -135,9 +165,12 @@ public class BankingSystem {
 
         BankAccount ba2 = null;
         for(Record record : this.records){
-            if(record.getBankAccounts().get(0).getAccountNumber().equals(accountNumber2)){
-                ba2 = record.getBankAccounts().get(0);
+            for(BankAccount bankAccount : record.getBankAccounts()){
+                if(bankAccount.getAccountNumber().equals(accountNumber2)){
+                    ba2 = bankAccount;
+                }
             }
+
         }if(ba2 == null){
             throw new RuntimeException("No such account");
         }

@@ -1,12 +1,13 @@
 package org.systemDesign;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CustomerDetails {
     String customerId;
     String name;
     String address;
-
 
 
     public CustomerDetails(String name,String address) {
@@ -19,14 +20,19 @@ public class CustomerDetails {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return "CustomerDetails{" +
-                "customerId=" + customerId +
-                ", name='" + name + '\'' +
-                '}';
+    public String getCustomerId() {
+        return customerId;
     }
 
-    //createAccount()
-    //closeAccount()
+    public String getAddress() {
+        return address;
+    }
+
+    public String toString() {
+        return "CustomerDetails{" +
+                "customerId='" + customerId + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address +
+                '}';
+    }
 }
