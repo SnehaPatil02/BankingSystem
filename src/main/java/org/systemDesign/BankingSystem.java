@@ -9,12 +9,16 @@ public class BankingSystem {
     List<BankAccount> accountList;
     TransactionManager transactionManager;
 
+    List<Loan> loans;
+
+
 
 
     public BankingSystem() {
         this.accountList = new ArrayList<>();
         this.records = new ArrayList<>();
         this.transactionManager = new TransactionManager();
+        this.loans = new ArrayList<>();
 
     }
 
@@ -185,6 +189,69 @@ public class BankingSystem {
         ba2.transactionRecords.add(ltr.get(1));
         return ltr;
 
+    }
+
+    public Record createLoan(String name, String address, String loanType, double amount, String duration){
+
+        Loan newloan = new StudentLoan(amount, loanType, duration);
+
+        for(Record record : this.records){
+            if(record.getCustomerDetails().getName().equals(name) && record.getCustomerDetails().getAddress().equals(address)){
+                record.addLoan(newloan);
+                System.out.println("------Loan is created for a existing customer------ " + "\n" + record.toString());
+                return record;
+            }
+        }
+
+        CustomerDetails customerDetails = new CustomerDetails(name, address);
+        Record newrecord = new Record(customerDetails, newloan);
+        this.records.add(newrecord);
+        System.out.println("------Loan is created for a new customer------ " + "\n" + newrecord.toString());
+
+        return newrecord;
+    }
+
+
+    public TransactionRecord dispatchAmount(String loanId, double amountTodispatch){
+        Loan loan = null;
+        for (Record r : this.records){
+            for (Loan l : r.getLoanList()){
+                if (l.getLoanId().equals(loanId)){
+                    loan = l;
+                    break;
+                }
+            }
+        }
+        if(loan == null){
+            throw new RuntimeException("no such loan");
+        }
+        TransactionRecord tr = this.transactionManager.dispatching(loan, amountTodispatch);
+        loan.transactionRecords.add(tr);
+
+        return tr;
+    }
+
+    //loan payment
+
+    public TransactionRecord loanPayment(String loanId, double amountToPay){
+        Loan l = null;
+        for (Record r : this.records){
+            for (Loan loan : r.getLoanList()){
+                if(loan.getLoanId().equals(loanId)){
+                    l = loan;
+                    break;
+                }
+            }
+        }
+
+        if(l == null){
+            throw new RuntimeException("Not found");
+        }
+
+        TransactionRecord tr = this.transactionManager.payment(l, amountToPay);
+        l.transactionRecords.add(tr);
+
+        return tr;
     }
 
 }

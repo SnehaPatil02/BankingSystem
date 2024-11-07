@@ -6,7 +6,7 @@ import java.util.UUID;
 public class TransactionRecord {
 
     String transactionId;
-    BankAccount bankAccount;
+    Loan loan;
     double amount;
 
     String type;
@@ -15,13 +15,21 @@ public class TransactionRecord {
 
     String toAccount;
 
-    public TransactionRecord(BankAccount bankAccount, double amount, String type,String message) {
+    public TransactionRecord( double amount, String type,String message) {
         this.transactionId = UUID.randomUUID().toString();
-        this.bankAccount = bankAccount;
         this.amount = amount;
         this.type = type;
         this.message = message;
     }
+
+    public TransactionRecord(Loan loan, double amount, String type){
+        this.transactionId = UUID.randomUUID().toString();
+        this.loan = loan;
+        this.amount = amount;
+        this.type = type;
+    }
+
+
 
     public void setToAccount(String toAccount) {
         this.toAccount = toAccount;
@@ -31,7 +39,6 @@ public class TransactionRecord {
         if (this.toAccount != null) {
             return "TransactionRecord{" +
                     "Transaction Id=" + transactionId + ", " +
-                    "bankAccount=" + bankAccount.getAccountNumber() +
                     ", amount=" + amount +
                     ", type='" + type + '\'' +
                     ", message='" + message + '\'' +
@@ -41,7 +48,6 @@ public class TransactionRecord {
         } else {
             return "TransactionRecord{" +
                     "Transaction Id=" + transactionId + ", " +
-                    "bankAccount=" + bankAccount.getAccountNumber() +
                     ", amount=" + amount +
                     ", type='" + type + '\'' +
                     ", message='" + message + '\'' +

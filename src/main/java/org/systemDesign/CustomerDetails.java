@@ -1,14 +1,17 @@
 package org.systemDesign;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 import java.util.UUID;
 
-public class CustomerDetails {
-    String customerId;
-    String name;
-    String address;
+public class CustomerDetails implements Serializable{
+    private String customerId;
+    private String name;
+    transient String address;
 
+
+    
+    public CustomerDetails() {
+    }
 
     public CustomerDetails(String name,String address) {
         this.customerId = UUID.randomUUID().toString();
@@ -26,6 +29,16 @@ public class CustomerDetails {
 
     public String getAddress() {
         return address;
+    }
+
+    
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String toString() {

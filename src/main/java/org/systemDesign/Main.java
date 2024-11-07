@@ -1,16 +1,23 @@
 package org.systemDesign;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 public class Main {
     public static void main(String[] args) {
 
         BankingSystem bankingSystem = new BankingSystem();
 
-        Record r1 = bankingSystem.createAccount("customer 1", "customer 1 address", "Fixed");
+        Record r1 = bankingSystem.createAccount("customer1", "customer1 address", "Fixed");
 
 
         System.out.println("***************************************" + "\n");
 
 
-        Record r2 = bankingSystem.createAccount("customer 1", "customer 1 address", "Savings");
+        Record r2 = bankingSystem.createAccount("customer1", "customer1 address", "Savings");
 
 
         System.out.println("*************************************************");
@@ -39,6 +46,48 @@ public class Main {
 
        // bankingSystem.closeAccount(r1.bankAccount.getAccountNumber());
 
+
+        Record loanRecord = bankingSystem.createLoan("customer1", "customer1 address", "Student Loan", 25000, "2 years");
+        bankingSystem.dispatchAmount(loanRecord.getLoanList().get(0).getLoanId(),15000.00);
+        System.out.println("First Dispatch " + loanRecord.getLoanList().get(0).dispatchedAmount);
+        bankingSystem.loanPayment(loanRecord.getLoanList().get(0).getLoanId(),5000.00);
+        System.out.println("Remaining amount " + loanRecord.getLoanList().get(0).dispatchedAmount);
+
+       bankingSystem.dispatchAmount(loanRecord.loanList.get(0).getLoanId(),15000.00);
+       System.out.println("Second Dispatch " + loanRecord.getLoanList().get(0).dispatchedAmount);
+
+       bankingSystem.dispatchAmount(loanRecord.loanList.get(0).getLoanId(),5000.00);
+       System.out.println("Third Dispatch " + loanRecord.getLoanList().get(0).dispatchedAmount);
+
+
+        CustomerDetails cd = new CustomerDetails();
+        cd.setName("abc");
+        cd.setAddress("dummy address");
+
+       
+        try
+            (FileOutputStream fileOutputStream = new FileOutputStream("/Users/snehapatil/Code/BankingSystem/src/main/resources/serialization");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(cd);
+            System.out.println("Serialized data is stored in BankingSystem/src folder");
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+        try (FileInputStream fileInputStream = new FileInputStream("/Users/snehapatil/Code/BankingSystem/src/main/resources/serialization");
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+        CustomerDetails cDetails = (CustomerDetails)
+        objectInputStream.readObject();
+        objectInputStream.close();
+
+        System.out.println("Deserialized Customer Details : ");
+        System.out.println("Name: " + cDetails.getName());
+        System.out.println("Address: " + cDetails.getAddress());
+            
+        } catch (IOException | ClassNotFoundException c) {
+           c.printStackTrace();
+        }
+        
 
 
     }

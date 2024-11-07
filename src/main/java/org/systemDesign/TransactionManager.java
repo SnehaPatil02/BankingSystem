@@ -10,7 +10,7 @@ public class TransactionManager {
     public TransactionRecord creditExecuteTransaction(BankAccount bankAccount, double amount, String msg){
          bankAccount.deposit(amount);
 
-         TransactionRecord tr = new TransactionRecord(bankAccount, amount, "credit", msg);
+         TransactionRecord tr = new TransactionRecord( amount, "credit", msg);
 
          return tr;
 
@@ -18,7 +18,7 @@ public class TransactionManager {
 
     public TransactionRecord debitExecuteTransaction(BankAccount bankAccount, double amount, String msg){
         bankAccount.withdraw(amount);
-        return new TransactionRecord(bankAccount, amount, "debit", msg);
+        return new TransactionRecord( amount, "debit", msg);
     }
 
     public List<TransactionRecord> executeTransfer(BankAccount account1, BankAccount account2, double amount, String msg1, String msg2){
@@ -32,5 +32,17 @@ public class TransactionManager {
         list.add(tr2);
 
         return list;
+    }
+
+    public TransactionRecord dispatching(Loan loan, double dispatchAmount){
+        double dispatched = loan.amountDispatching(dispatchAmount);
+
+         return new TransactionRecord(loan, dispatched, "debit");
+    }
+
+    public TransactionRecord payment(Loan loan, double amountToPay){
+        double paidAmount = loan.payingAmount(amountToPay);
+
+        return new TransactionRecord(loan, paidAmount, "credit");
     }
 }
